@@ -219,22 +219,22 @@ func dataUser() *schema.Resource {
 				Computed: true,
 			},
 
-			"custom_schema": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"value": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-					},
-				},
-			},
+			"custom_schemas": {
+        Type:     schema.TypeList,
+        Computed: true,
+        Elem: &schema.Resource{
+          Schema: map[string]*schema.Schema{
+            "name": {
+              Computed: true,
+              Type: schema.TypeString,
+            },
+            "value": {
+              Computed: true,
+              Type: schema.TypeString,
+            },
+          },
+        },
+      },
 
 			"external_ids": {
 				Type:     schema.TypeList,
@@ -323,13 +323,18 @@ func dataUserRead(d *schema.ResourceData, meta interface{}) error {
 	var user *directory.User
 	var err error
 	err = retry(func() error {
-		user, err = config.directory.Users.Get(d.Get("primary_email").(string)).Do()
+		user, err = config.directory.Users.Get(d.Get("primary_email").(string)).Projection("full").Do()
 		return err
 	}, config.TimeoutMinutes)
 
 	if err != nil {
 		return handleNotFoundError(err, d, fmt.Sprintf("User %q", d.Id()))
 	}
+
+	u_err, u_msg := flattenCustomSchema(user.CustomSchemas)
+  if u_err != nil {
+    return handleNotFoundError(u_err, d, fmt.Sprintf("Flatten schema error with user %q", d.Id()))
+  }
 
 	d.SetId(user.Id)
 	d.Set("deletion_time", user.DeletionTime)
@@ -358,7 +363,7 @@ func dataUserRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("name", flattenUserName(user.Name))
 	d.Set("posix_accounts", user.PosixAccounts)
 	d.Set("ssh_public_keys", user.SshPublicKeys)
-	d.Set("custom_schema", user.CustomSchemas)
+	d.Set("custom_schemas", u_msg)
 	d.Set("external_ids", user.ExternalIds)
 	d.Set("organizations", user.Organizations)
 

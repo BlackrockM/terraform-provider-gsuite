@@ -53,7 +53,6 @@ func Provider() *schema.Provider {
 			"gsuite_group_settings":  dataGroupSettings(),
 			"gsuite_user":            dataUser(),
 			"gsuite_user_attributes": dataUserAttributes(),
-			"gsuite_user_values":     dataUserValues(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"gsuite_domain":          resourceDomain(),
