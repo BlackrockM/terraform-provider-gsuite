@@ -46,7 +46,7 @@ LD_FLAGS ?= \
 TEST ?= ./...
 
 # Path to Terraform plugins
-PLUGIN_PATH ?= "${HOME}/.terraform.d/plugins"
+PLUGIN_PATH ?= "${HOME}/.terraform.d/plugins/logiqlabs.local/devops/gsuite/0.1.58/linux_amd64"
 
 # Create a cross-compile target for every os-arch pairing. This will generate
 # a make target for each os/arch like "make linux/amd64" as well as generate a
@@ -108,7 +108,7 @@ dev: vendor
 		-mod vendor \
 		-ldflags "${LD_FLAGS}" \
 		-tags "${GOTAGS}" \
-		-o "${PLUGIN_PATH}/terraform-provider-${PKG_NAME}"
+		-o "${PLUGIN_PATH}/terraform-provider-${PKG_NAME}_v${VERSION}"
 
 # test runs all tests
 test:
