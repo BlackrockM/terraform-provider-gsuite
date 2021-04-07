@@ -36,8 +36,8 @@ func dataUserValues() *schema.Resource {
           },
         },
       },
-		},
-	}
+    },
+  }
 }
 
 func dataUserValuesRead(d *schema.ResourceData, meta interface{}) error {
