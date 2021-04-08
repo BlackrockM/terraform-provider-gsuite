@@ -179,7 +179,7 @@ _checksum:
 _sign:
 	@echo "==> Signing ${PROJECT} at v${VERSION}"
 	@gpg \
-		--default-key "${GPG_KEY}" \
+		--local-user "${GPG_KEY}" \
 		--detach-sig "${CURRENT_DIR}/pkg/dist/${NAME}_${VERSION}_SHA256SUMS"
 	@git commit \
 		--allow-empty \
