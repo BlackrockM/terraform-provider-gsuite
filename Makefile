@@ -18,10 +18,10 @@ GOMAXPROCS ?= 8
 # Get the project metadata
 GOVERSION := 1.15
 PKG_NAME := gsuite
-PROJECT := github.com/DeviaVir/terraform-provider-$(PKG_NAME)
+PROJECT := github.com/BlackrockM/terraform-provider-$(PKG_NAME)
 OWNER := $(notdir $(patsubst %/,%,$(dir $(PROJECT))))
 NAME := $(notdir $(PROJECT))
-VERSION := 0.1.58
+VERSION := 0.0.2-alpha
 EXTERNAL_TOOLS = \
 	github.com/golang/dep/cmd/dep
 
@@ -35,7 +35,7 @@ XC_ARCH ?= amd64 386 arm
 XC_EXCLUDE ?= darwin/386 darwin/arm solaris/386 solaris/arm windows/arm
 
 # GPG Signing key (blank by default, means no GPG signing)
-GPG_KEY ?=
+GPG_KEY ?= 18F11AAE806055CC
 
 # List of ldflags
 LD_FLAGS ?= \
@@ -151,7 +151,7 @@ _cleanup:
 # _compress compresses all the binaries in pkg/* as zip.
 _compress:
 	@mkdir -p "${CURRENT_DIR}/pkg/dist"
-	@for platform in $$(find ./pkg -mindepth 1 -maxdepth 1 -type d); do \
+	@for platform in $$(find ${CURRENT_DIR}/pkg -mindepth 1 -maxdepth 1 -type d); do \
 		osarch=$$(basename "$$platform"); \
 		if [ "$$osarch" = "dist" ]; then \
 			continue; \
